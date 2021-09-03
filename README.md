@@ -1,8 +1,6 @@
-<h1 style="text-align:center">THE PRODUCTIVITY APP</h1>
+<h1>THE PRODUCTIVITY APP</h1>
 
 Well, the productivity app is specifically designed to cater the needs of productivity tracking and thereby enchancement!
-
-NOTE: the app is made in electron js.
 
 Current features of this app:
 
