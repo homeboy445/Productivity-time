@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Productivity App</title>
+    <link rel="stylesheet" href="../css/index.css" />
+    <style>
+      .center {
+        font-family: "intro", Verdana, Geneva, Tahoma;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="center">
+      <p class="date"></p>
+      <h1 class="hdr">Productivity Time!🙌</h1>
+      <div class="timer">
+        <h1 id="hrs">00</h1>
+        <h1>:</h1>
+        <h1 id="min">00</h1>
+        <h1>:</h1>
+        <h1 id="sec">00</h1>
+      </div>
+      <div class="butns">
+        <button id="start">Start</button>
+        <button id="stop">Stop</button>
+        <button id="reset">Reset</button>
+      </div>
+      <h1>
+        Task on progess:<span
+          id="current"
+          style="text-shadow: 2px 2px 2px black"
+        ></span>
+      </h1>
+      <div class="todo">
+        <h1>My To-Do for today!</h1>
+        <button id="adtsk">Add Task</button>
+        <table id="tasklist">
+          <tr>
+            <th>Task</th>
+            <th>Priority</th>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </body>
+  <footer>
+    <script src="../js/timer.js"></script>
+  </footer>
+</html>

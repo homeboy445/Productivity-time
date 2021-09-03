@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Charts Tester</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.css"
+    />
+  </head>
+  <body>
+    <canvas id="myChart"></canvas>
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script>
+  <script>
+    var ctx = document.getElementById("myChart").getContext("2d");
+    var chart = new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        labels: ["Task1", "Task2", "Task3", "Task4", "Task5"],
+        datasets: [
+          {
+            label: "Tasks",
+            data: [2, 8, 4, 3, 9],
+            backgroundColor: [
+              "rgb(255, 0, 0)",
+              "rgb(0, 0, 255)",
+              "rgb(60, 179, 113)",
+              "rgb(238, 130, 238)",
+              "rgb(238, 100, 200)",
+            ],
+            borderWidth: 1,
+            borderColor: "#fff",
+            hoverborderWidth: 3,
+            hoverBorderColor: "black",
+          },
+        ],
+      },
+      options: {
+        title: {
+          display: true,
+          text: "Task Graph",
+        },
+      },
+    });
+  </script>
+</html>

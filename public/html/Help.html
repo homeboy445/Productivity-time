@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Help</title>
+    <style>
+      .shw {
+        display: flex;
+        flex-direction: column;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        justify-content: center;
+        align-items: center;
+      }
+      .hd {
+        text-align: center;
+        font-size: 3rem;
+      }
+      .tog {
+        display: flex;
+        flex-direction: column;
+        margin: 1%;
+      }
+      .kl {
+        color: "purple";
+        text-shadow: 1px 1px 1px red;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shw">
+      <h1 class="hd">Help Book!</h1>
+      <div>
+        <h1>How to use this App efficiently?</h1>
+        <h3>
+          Well,We suggest that you follow your routine and track it daily so as
+          to measure your productivity status and enhance it thereafter.
+        </h3>
+      </div>
+      <div>
+        <h1>How to start using?</h1>
+        <h3>
+          Well first you'll have to add some tasks for you to work upon ,then
+          you may start any of your task accordingly to your priority.
+          (Note:While this app doesn't sort tasks according to priority but
+          still we'll suggest to go from highest to lowest)
+        </h3>
+      </div>
+      <div>
+        <h1>Functionalities Overview!</h1>
+        <h2 class="tog">
+          <span class="kl">Start:</span
+          ><span
+            ><p>
+              Pressing it will trigger the timer and a window to ask your task
+              will prompt.
+            </p></span
+          >
+        </h2>
+        <h2 class="tog">
+          <span class="kl">Stop:</span
+          ><span><p>Pressing it will stop the timer.</p></span>
+        </h2>
+        <h2 class="tog">
+          <span class="kl">Reset:</span
+          ><span
+            ><p>
+              Pressing it will prompt a window which will ask if you want to
+              switch to some other task and/or this task's done or you're going
+              to continue with the same task.
+            </p></span
+          >
+        </h2>
+        <h2 class="tog">
+          <span class="kl">Resume:</span
+          ><span><p>This will resume the timer.</p></span>
+        </h2>
+        <h2 class="tog">
+          <span class="kl">CompletedTask:</span
+          ><span
+            ><p>
+              This will show you with details the tasks you've done lately or
+              more previous(if present).
+            </p></span
+          >
+        </h2>
+        <h2 class="tog">
+          <span class="kl">Task stat:</span
+          ><span><p>This will show you the graph of your tasks done.</p></span>
+        </h2>
+        <h2 class="tog">
+          <span class="kl">Break-Time:</span
+          ><span
+            ><p>
+              This is a window which we'll prompt within every 45 minutes to
+              stop you from overloading.
+            </p></span
+          >
+        </h2>
+      </div>
+      <div>
+        <h1>How to use the task statistics or completed tasks window?</h1>
+        <h3>
+          To view the data, You first select the month and click on getDates
+          button and then the dates will be there on the choosable dates
+          menu.Then you can choose to see data of any date that you want.
+        </h3>
+      </div>
+      <div>
+        <h1>
+          What if the app behaves strangely and/or Doesn't perform any function?
+        </h1>
+        <h3>
+          Well,For such cases we would recommend to reload the app or (if
+          problem persists) then close the app and open it again.Also please let
+          us know if anything like this ever happens.You can do the same by
+          going to the form link in the Dev notes and filling the form for
+          feedback.😊
+        </h3>
+      </div>
+      <h1>
+        We hope you'll love this app and will grow a lot in your carrer or in
+        your day to day life fabulously. Also don't forget to provide feedback
+        to get awesome new features. Happy Productivity!😘
+      </h1>
+    </div>
+  </body>
+  <footer>
+    <script>
+      const { ipcRenderer, remote } = require("electron");
+      ipcRenderer.on("theme-change", (e, data) => {
+        Manage_Theme(data);
+      });
+      const Manage_Theme = (theme) => {
+        var curBg = document.body;
+        curBg.style.backgroundSize = "cover";
+        curBg.style.backgroundRepeat = "no-repeat";
+        curBg.style.minHeight = "100vh";
+        curBg.style.textShadow = "1px 1px 1px black";
+        curBg.style.color = "white";
+        if (theme == "Simplx-Light") {
+          curBg.style.background = "white";
+          curBg.style.color = "black";
+          curBg.style.textShadow = "none";
+        }
+        if (theme == "Simplx-Dark") {
+          curBg.style.background = "rgb(39, 40, 41)";
+          curBg.style.color = "yellow";
+        }
+        if (theme == "Party-Tonight") {
+          curBg.style.background = "#21D4FD";
+          curBg.style.backgroundImage =
+            "linear-gradient(19deg, #21D4FD 0%, #B721FF 100%)";
+          curBg.style.textShadow = "2px 2px 2px black";
+        }
+        if (theme == "Vintage-Villager") {
+          curBg.style.background = "#00DBDE";
+          curBg.style.backgroundImage =
+            "linear-gradient(90deg, #00DBDE 0%, #FC00FF 100%)";
+        }
+        if (theme == "BlueOcean") {
+          curBg.style.background = "#0093E9";
+          curBg.style.backgroundImage =
+            "linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)";
+        }
+      };
+      let curWin = remote.getGlobal("global");
+      Manage_Theme(curWin.custom());
+    </script>
+  </footer>
+</html>

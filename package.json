@@ -1,0 +1,26 @@
+{
+  "name": "productivity-time",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start":"electron index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/homeboy445/Productivity-time.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/homeboy445/Productivity-time/issues"
+  },
+  "homepage": "https://github.com/homeboy445/Productivity-time#readme",
+  "devDependencies": {
+    "electron": "^14.0.0"
+  },
+  "dependencies": {
+    "chart.js": "^3.5.1",
+    "electron-squirrel-startup": "^1.0.0"
+  }
+}

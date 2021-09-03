@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Are you Done?</title>
+    <style>
+      .hdr {
+        text-align: center;
+      }
+      .task_butns {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .task_butns button {
+        margin: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="task_completion">
+      <h2 class="hdr">Have you completed this task?</h2>
+      <div class="task_butns">
+        <button id="dn">Yup,Done!</button>
+        <button id="np">Nope,Onit!</button>
+      </div>
+    </div>
+  </body>
+  <footer>
+    <script>
+      var { ipcRenderer, remote } = require("electron");
+      var done = document.getElementById("dn");
+      var notdone = document.getElementById("np");
+      ipcRenderer.on("theme-change", (e, data) => {
+        Manage_Theme(data);
+      });
+      const Manage_Theme = (theme) => {
+        var curBg = document.body;
+        curBg.style.backgroundSize = "cover";
+        curBg.style.backgroundRepeat = "no-repeat";
+        curBg.style.minHeight = "100vh";
+        if (theme == "Simplx-Light") {
+          curBg.style.background = "white";
+          curBg.style.color = "black";
+        }
+        if (theme == "Simplx-Dark") {
+          curBg.style.background = "rgb(39, 40, 41)";
+          curBg.style.color = "yellow";
+        }
+        if (theme == "Party-Tonight") {
+          curBg.style.background = "#21D4FD";
+          curBg.style.backgroundImage =
+            "linear-gradient(19deg, #21D4FD 0%, #B721FF 100%)";
+          curBg.style.color = "white";
+          curBg.style.textShadow = "2px 2px 2px black";
+        }
+        if (theme == "Vintage-Villager") {
+          curBg.style.background = "#00DBDE";
+          curBg.style.backgroundImage =
+            "linear-gradient(90deg, #00DBDE 0%, #FC00FF 100%)";
+        }
+        if (theme == "BlueOcean") {
+          curBg.style.background = "#0093E9";
+          curBg.style.backgroundImage =
+            "linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)";
+        }
+      };
+      let curWin = remote.getGlobal("global");
+      Manage_Theme(curWin.custom());
+      done.addEventListener("click", () => {
+        ipcRenderer.send("task:verdict", {
+          status: true,
+          verdict: done.innerText,
+        });
+      });
+      notdone.addEventListener("click", () => {
+        var h2 = document.querySelector(".hdr");
+        h2.innerText = "What's on your mind?";
+        if (notdone.innerText == "Continue Project") {
+          ipcRenderer.send("task:verdict", {
+            status: false,
+            verdict: notdone.innerText,
+          });
+        }
+        done.innerText = "Next Project";
+        notdone.innerText = "Continue Project";
+      });
+    </script>
+  </footer>
+</html>

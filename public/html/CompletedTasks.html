@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Completed Tasks Archive</title>
+    <style>
+      .cnt {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
+      .mt {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        margin: 2%;
+      }
+      .mt select {
+        margin: 1%;
+      }
+      #sel {
+        margin: 2%;
+      }
+      #sel option {
+        margin: 2%;
+      }
+      .flx {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+      .flx select {
+        margin: 1%;
+      }
+      .reslt {
+        margin: 2%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cnt">
+      <div class="mt">
+        <select id="month">
+          <option value="month">Month</option>
+        </select>
+        <button id="butn">Get Dates</button>
+      </div>
+      <div class="flx">
+        <select id="dts">
+          <option value="date">Dates</option>
+        </select>
+        <button id="sR">Show Results</button>
+      </div>
+      <div class="reslt"></div>
+    </div>
+  </body>
+  <footer>
+    <script>
+      const fs = require("fs");
+      const path = require("path");
+      const { ipcRenderer, remote } = require("electron");
+      const { GetCompleteData } = require(path.join(
+        __dirname + "/DataParser.js"
+      ));
+      var select = document.getElementById("ss");
+      ipcRenderer.on("theme-change", (e, data) => {
+        Manage_Theme(data);
+      });
+      var Months = {
+        1: "Jan",
+        2: "Feb",
+        3: "Mar",
+        4: "Apr",
+        5: "May",
+        6: "Jun",
+        7: "Jul",
+        8: "Aug",
+        9: "Sep",
+        10: "Oct",
+        11: "Nov",
+        12: "Dec",
+      };
+      const Manage_Theme = (theme) => {
+        var curBg = document.body;
+        curBg.style.backgroundSize = "cover";
+        curBg.style.backgroundRepeat = "no-repeat";
+        curBg.style.minHeight = "100vh";
+        if (theme == "Simplx-Light") {
+          curBg.style.background = "white";
+          curBg.style.color = "black";
+        }
+        if (theme == "Simplx-Dark") {
+          curBg.style.background = "rgb(39, 40, 41)";
+          curBg.style.color = "yellow";
+        }
+        if (theme == "Party-Tonight") {
+          curBg.style.background = "#21D4FD";
+          curBg.style.backgroundImage =
+            "linear-gradient(19deg, #21D4FD 0%, #B721FF 100%)";
+          curBg.style.color = "white";
+          curBg.style.textShadow = "2px 2px 2px black";
+        }
+        if (theme == "Vintage-Villager") {
+          curBg.style.background = "#00DBDE";
+          curBg.style.backgroundImage =
+            "linear-gradient(90deg, #00DBDE 0%, #FC00FF 100%)";
+        }
+        if (theme == "BlueOcean") {
+          curBg.style.background = "#0093E9";
+          curBg.style.backgroundImage =
+            "linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)";
+        }
+      };
+      let curWin = remote.getGlobal("global");
+      Manage_Theme(curWin.custom());
+      var selected_date = null;
+      const GroupByDate = (obj) => {
+        var dates = {};
+        obj.map((item) => {
+          if (
+            typeof dates[item.date] == undefined ||
+            dates[item.date] == null
+          ) {
+            dates[item.date] = [
+              { task: item.task, time_taken: item.time_taken },
+            ];
+          } else {
+            dates[item.date].push({
+              task: item.task,
+              time_taken: item.time_taken,
+            });
+          }
+        });
+        return dates;
+      };
+      const GroupByMonth = (data) => {
+        var M_list = {},
+          kk = 0;
+        data.map((item) => {
+          kk = item.date.split("/")[0];
+          if (typeof M_list[+kk] == undefined || M_list[+kk] == null) {
+            M_list[+kk] = [item];
+          } else {
+            M_list[+kk].push(item);
+          }
+        });
+        return M_list;
+      };
+      const AppendMonth = (obj) => {
+        var ok = document.getElementById("month");
+        for (const [key, value] of Object.entries(obj)) {
+          var option = document.createElement("option");
+          option.value = key;
+          option.innerText = Months[key];
+          ok.appendChild(option);
+        }
+      };
+      var data_R = GetCompleteData()[0];
+      var Mlist = GroupByMonth(data_R);
+      var data,
+        cur_month = null;
+      AppendMonth(Mlist);
+      var gD = document.getElementById("butn");
+      gD.addEventListener("click", () => {
+        var select = document.getElementById("dts");
+        var k = document.getElementById("month");
+        if (k.value == "month") {
+          return;
+        }
+        if (cur_month != null) {
+          Mlist[cur_month].map((item) => {
+            var dv = document.getElementById(`${item.date}`);
+            dv.remove();
+          });
+        }
+        cur_month = k.value;
+        data = GroupByDate(Mlist[k.value]);
+        for (const [key, value] of Object.entries(data)) {
+          var option = document.createElement("option");
+          option.innerText = key;
+          option.id = key;
+          select.appendChild(option);
+        }
+      });
+      var selected_date = null;
+      const AppendData = (date) => {
+        if (date == "date" || selected_date == date) {
+          return;
+        }
+        if (selected_date != null && selected_date != date) {
+          var div = document.getElementById(`${selected_date}`);
+          selected_date = date;
+          div.remove();
+        }
+        var div_data = document.querySelector(".reslt");
+        var div1 = document.createElement("div");
+        div1.id = `${date}`;
+        if (selected_date != date && selected_date != null) {
+          div1.remove(); //Test for Different Dates!
+        }
+        selected_date = date;
+        data[date].map((item) => {
+          var h1 = document.createElement("h1");
+          var h2 = document.createElement("h2");
+          h1.innerText = `Task:${item.task}`;
+          h2.innerText = `Time it Took to complete:${item.time_taken}`;
+          div1.appendChild(h1);
+          div1.appendChild(h2);
+        });
+        div_data.appendChild(div1);
+      };
+      const button = document.getElementById("sR");
+      button.addEventListener("click", () => {
+        var t = document.getElementById("dts").value;
+        AppendData(t);
+      });
+    </script>
+  </footer>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Developer Notes</title>
+  </head>
+  <style>
+    .k {
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+    .ip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 3%;
+    }
+    .k h1 {
+      text-align: center;
+      margin: 2%;
+    }
+    .k h3 {
+      margin: 3%;
+    }
+    .k h2 {
+      margin: 3%;
+    }
+  </style>
+  <body>
+    <div class="k">
+      <h1>Thanks a lot!</h1>
+      <h3>
+        Hey,there! I'm the developer of this app.I've put hours to make your
+        productivity session a comfortable one! I hope the features must've
+        served you well. But still if you faced any error whatsoever,please
+        reach out to me through below form. Cheers!😘
+      </h3>
+      <div class="ip">
+        <input
+          type="text"
+          value="https://forms.gle/raZJsaJxUvx7XwZZ7"
+          class="inp"
+        />
+        <button id="cpy">Copy</button>
+      </div>
+      <h2>About the Developer:Just a nerd who codes for fun!</h2>
+    </div>
+  </body>
+  <footer>
+    <script>
+      const { ipcRenderer, remote } = require("electron");
+      ipcRenderer.on("theme-change", (e, data) => {
+        Manage_Theme(data);
+      });
+      var inpt = document.querySelector(".inp");
+      inpt.readOnly = true;
+      document.getElementById("cpy").addEventListener("click", () => {
+        inpt.select();
+        document.execCommand("copy");
+      });
+      const Manage_Theme = (theme) => {
+        var curBg = document.body;
+        curBg.style.backgroundSize = "cover";
+        curBg.style.backgroundRepeat = "no-repeat";
+        curBg.style.minHeight = "100vh";
+        curBg.style.color = "white";
+        curBg.style.textShadow = "2px 2px 2px black";
+        if (theme == "Simplx-Light") {
+          curBg.style.background = "white";
+          curBg.style.color = "black";
+          curBg.style.textShadow = "none";
+        }
+        if (theme == "Simplx-Dark") {
+          curBg.style.background = "rgb(39, 40, 41)";
+          curBg.style.color = "yellow";
+        }
+        if (theme == "Party-Tonight") {
+          curBg.style.background = "#21D4FD";
+          curBg.style.backgroundImage =
+            "linear-gradient(19deg, #21D4FD 0%, #B721FF 100%)";
+        }
+        if (theme == "Vintage-Villager") {
+          curBg.style.background = "#00DBDE";
+          curBg.style.backgroundImage =
+            "linear-gradient(90deg, #00DBDE 0%, #FC00FF 100%)";
+        }
+        if (theme == "BlueOcean") {
+          curBg.style.background = "#0093E9";
+          curBg.style.backgroundImage =
+            "linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)";
+        }
+      };
+      let curWin = remote.getGlobal("global");
+      Manage_Theme(curWin.custom());
+    </script>
+  </footer>
+</html>

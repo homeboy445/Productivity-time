@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Overall Productivity Statistics</title>
+    <style>
+      body {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
+      .Ch-Srt {
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <select id="mt">
+      <option value="month">Month</option>
+    </select>
+    <button id="dt">GetDates</button>
+    <select id="Selc">
+      <option value="time">Select</option>
+    </select>
+    <button id="gp">Show Graph</button>
+    <div id="chart-div"></div>
+    <div id="Ch-Srt"></div>
+  </body>
+  <script>
+    const fs = require("fs");
+    const path = require("path");
+    const { ipcRenderer, remote } = require("electron");
+    const Chart = require("chart.js");
+    var colors = "grey",
+      TextColor = "black";
+    const divAp = document.getElementById("Ch-Srt");
+    const { GetCompleteData } = require(path.join(__dirname, "DataParser.js"));
+    var Months = {
+      1: "Jan",
+      2: "Feb",
+      3: "Mar",
+      4: "Apr",
+      5: "May",
+      6: "Jun",
+      7: "Jul",
+      8: "Aug",
+      9: "Sep",
+      10: "Oct",
+      11: "Nov",
+      12: "Dec",
+    };
+    const GroupByMonth = (data) => {
+      var M_list = {},
+        kk = 0;
+      data.map((item) => {
+        kk = item.date.split("/")[0];
+        if (typeof M_list[+kk] == undefined || M_list[+kk] == null) {
+          M_list[+kk] = [item];
+        } else {
+          M_list[+kk].push(item);
+        }
+      });
+      return M_list;
+    };
+    var Select = document.getElementById("Selc");
+    const Data = GetCompleteData()[1];
+    var Month_data = GroupByMonth(Data);
+    const AppendMonth = (obj) => {
+      for (const [key, value] of Object.entries(obj)) {
+        var sel = document.getElementById("mt");
+        var option = document.createElement("option");
+        option.value = key;
+        option.innerText = Months[key];
+        sel.appendChild(option);
+      }
+    };
+    AppendMonth(Month_data);
+    var cur_month = null;
+    ipcRenderer.on("theme-change", (e, data) => {
+      Manage_Theme(data);
+    });
+    document.getElementById("dt").addEventListener("click", () => {
+      var m = document.getElementById("mt");
+      if (m.value == "month") {
+        return;
+      }
+      if (cur_month != null) {
+        Month_data[cur_month].map((item) => {
+          var dv = document.getElementById(`@${item.date}`);
+          dv.remove();
+        });
+      }
+      cur_month = m.value;
+      var Display_Date = GroupByDate(Month_data[m.value]);
+      for (const [key, value] of Object.entries(Display_Date)) {
+        var option = document.createElement("option");
+        option.value = key;
+        option.id = `@${key}`;
+        option.innerText = key;
+        Select.appendChild(option);
+      }
+    });
+    const Manage_Theme = (theme) => {
+      var curBg = document.body;
+      curBg.style.backgroundSize = "cover";
+      curBg.style.backgroundRepeat = "no-repeat";
+      curBg.style.minHeight = "100vh";
+      curBg.style.color = "white";
+      curBg.style.textShadow = "1px 1px 1px black";
+      if (theme == "Simplx-Light") {
+        curBg.style.background = "white";
+        curBg.style.color = "black";
+        colors = "grey";
+        TextColor = "black";
+      }
+      if (theme == "Simplx-Dark") {
+        curBg.style.background = "rgb(39, 40, 41)";
+        curBg.style.color = "yellow";
+        colors = "yellow";
+        TextColor = "yellow";
+      }
+      if (theme == "Party-Tonight") {
+        curBg.style.background = "#21D4FD";
+        curBg.style.backgroundImage =
+          "linear-gradient(19deg, #21D4FD 0%, #B721FF 100%)";
+        curBg.style.textShadow = "2px 2px 2px black";
+        colors = "red";
+        TextColor = "white";
+      }
+      if (theme == "Vintage-Villager") {
+        curBg.style.background = "#00DBDE";
+        curBg.style.backgroundImage =
+          "linear-gradient(90deg, #00DBDE 0%, #FC00FF 100%)";
+        colors = "rgb(61, 255, 245)";
+        TextColor = "red";
+      }
+      if (theme == "BlueOcean") {
+        curBg.style.background = "#0093E9";
+        curBg.style.backgroundImage =
+          "linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)";
+        colors = "purple";
+        TextColor = "red";
+      }
+    };
+    let curWin = remote.getGlobal("global");
+    Manage_Theme(curWin.custom());
+    const GroupByDate = (obj) => {
+      var dates = {};
+      obj.map((item) => {
+        if (typeof dates[item.date] == undefined || dates[item.date] == null) {
+          dates[item.date] = [{ task: item.task, time_taken: item.time_taken }];
+        } else {
+          dates[item.date].push({
+            task: item.task,
+            time_taken: item.time_taken,
+          });
+        }
+      });
+      return dates;
+    };
+    var Selected_Date = null;
+    const AppendToList = (div, text) => {
+      var p = document.createElement("p");
+      p.style.margin = "10px";
+      p.innerText = text;
+      div.appendChild(p);
+    };
+    const AppendChart = (date) => {
+      if (Selected_Date == date) {
+        return;
+      }
+      if (Selected_Date != date && Selected_Date != null) {
+        document.getElementById(Selected_Date).remove();
+        document.getElementById(`${Selected_Date}-t`).remove();
+      }
+      Selected_Date = date;
+      var div1 = document.createElement("div");
+      div1.style.display = "flex";
+      div1.style.flexDirection = "column";
+      div1.style.overflow = "hidden";
+      div1.style.justifyContent = "center";
+      div1.style.alignItems = "center";
+      div1.id = `${date}-t`;
+      var h2 = document.createElement("h2");
+      h2.innerText = "Task Analogies";
+      div1.appendChild(h2);
+      divAp.appendChild(div1);
+      const Task_Data = [],
+        Time_Taken = [];
+      var Task_Obj = {};
+      var counter = 0;
+      Data.map((item) => {
+        if (item.date == date) {
+          var Tsk = `T${++counter}`;
+          if (typeof Task_Obj[item] == undefined || Task_Obj[item] == null) {
+            Task_Obj[Tsk] = item.task;
+          }
+          Task_Data.push(Tsk);
+          Time_Taken.push(item.time_taken / 60);
+        }
+      });
+      var canvas = document.createElement("canvas");
+      canvas.id = date;
+      var div = document.getElementById("chart-div");
+      div.appendChild(canvas);
+      Chart.defaults.global.defaultFontColor = TextColor;
+      var TaskChart = new Chart(date, {
+        type: "bar",
+        data: {
+          labels: Task_Data,
+          datasets: [
+            {
+              label: "Tasks",
+              data: Time_Taken,
+              backgroundColor: colors,
+              borderWidth: 1,
+              borderColor: "#fff",
+              hoverborderWidth: 2,
+              hoverBorderColor: "black",
+            },
+          ],
+        },
+        options: {
+          title: {
+            display: true,
+            text: "Minutes vs Task Graph",
+          },
+        },
+      });
+      for (const [key, value] of Object.entries(Task_Obj)) {
+        AppendToList(div1, `${key}:${value}`);
+      }
+    };
+    const button = document.getElementById("gp");
+    button.addEventListener("click", () => {
+      if (Select.value == "time") {
+        return;
+      }
+      AppendChart(Select.value);
+    });
+    // var TCid=document.getElementById('TaskChart').getContext('2d');
+  </script>
+</html>

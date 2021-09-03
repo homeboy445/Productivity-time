@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>And you're upto?</title>
+    <style>
+      .sel {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+      #sel {
+        margin: 5%;
+      }
+      .sel button {
+        margin: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sel">
+      <select id="sel">
+        <option>Tasks</option>
+      </select>
+      <button id="btn">Let's Roll!</button>
+      <h2 id="hh"></h2>
+    </div>
+  </body>
+  <footer>
+    <script>
+      const { ipcRenderer, remote } = require("electron");
+      const fs = require("fs");
+      const path = require("path");
+      const { getData } = require(path.join(__dirname + "/DataParser.js"));
+      ipcRenderer.on("theme-change", (e, data) => {
+        Manage_Theme(data);
+      });
+      const Manage_Theme = (theme) => {
+        var curBg = document.body;
+        curBg.style.backgroundSize = "cover";
+        curBg.style.backgroundRepeat = "no-repeat";
+        curBg.style.minHeight = "100vh";
+        curBg.style.color = "white";
+        curBg.style.textShadow = "1px 1px 1px black";
+        if (theme == "Simplx-Light") {
+          curBg.style.background = "white";
+          curBg.style.color = "black";
+          curBg.style.textShadow = "none";
+        }
+        if (theme == "Simplx-Dark") {
+          curBg.style.background = "rgb(39, 40, 41)";
+          curBg.style.color = "yellow";
+        }
+        if (theme == "Party-Tonight") {
+          curBg.style.background = "#21D4FD";
+          curBg.style.backgroundImage =
+            "linear-gradient(19deg, #21D4FD 0%, #B721FF 100%)";
+          curBg.style.textShadow = "2px 2px 2px black";
+        }
+        if (theme == "Vintage-Villager") {
+          curBg.style.background = "#00DBDE";
+          curBg.style.backgroundImage =
+            "linear-gradient(90deg, #00DBDE 0%, #FC00FF 100%)";
+        }
+        if (theme == "BlueOcean") {
+          curBg.style.background = "#0093E9";
+          curBg.style.backgroundImage =
+            "linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)";
+        }
+      };
+      let curWin = remote.getGlobal("global");
+      Manage_Theme(curWin.custom());
+      const AppendTasktoList = (data) => {
+        var select = document.getElementById("sel");
+        var option = document.createElement("option");
+        option.innerText = data.task;
+        option.value = data.task;
+        select.appendChild(option);
+      };
+      var data = getData();
+      data.map((item) => {
+        AppendTasktoList(item);
+      });
+      document.getElementById("btn").addEventListener("click", () => {
+        var task_data = document.getElementById("sel").value;
+        if (task_data != "Tasks") {
+          ipcRenderer.send("selected:task", {
+            task: task_data,
+            status: true,
+          });
+        } else {
+          if (data.length == 0 || typeof data == undefined || data == null) {
+            var h2 = document.getElementById("hh");
+            ipcRenderer.send("selected:task", {
+              task: null,
+              status: false,
+            });
+          }
+        }
+      });
+    </script>
+  </footer>
+</html>

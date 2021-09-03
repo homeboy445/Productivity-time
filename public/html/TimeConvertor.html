@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Time Convertor</title>
+    <style>
+      body {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
+      .tmc {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 50%;
+        margin-top: 10%;
+        margin-left: 25%;
+      }
+      .cnv {
+        display: flex;
+        margin: 3%;
+      }
+      .cnv select {
+        margin: 1%;
+        width: 50%;
+        height: 10%;
+      }
+      .to {
+        font-size: 1rem;
+        margin: 1%;
+      }
+      #go {
+        cursor: pointer;
+      }
+      .cm {
+        display: flex;
+        width: 10%;
+        justify-content: center;
+        align-items: center;
+        margin: 3%;
+        margin-right: 4%;
+      }
+      .cm input {
+        width: 100px;
+        margin: 1%;
+      }
+      .cm button {
+        cursor: pointer;
+      }
+      .cm input {
+        border-radius: 4px;
+        text-align: center;
+        margin: 1%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="tmc">
+      <div class="cnv">
+        <select id="from">
+          <option value="min">Minutes</option>
+          <option value="hrs">Hours</option>
+          <option value="sec">Seconds</option>
+        </select>
+        <h3 class="to">to</h3>
+        <select id="to">
+          <option value="min">Minutes</option>
+          <option value="hrs">Hours</option>
+          <option value="sec">Seconds</option>
+        </select>
+      </div>
+      <div class="cm">
+        <input type="text" id="inp" placeholder="input" autofocus="true" />
+        <button id="btn">Go</button>
+        <input type="text" id="inp1" placeholder="output" />
+      </div>
+    </div>
+  </body>
+  <footer>
+    <script>
+      const { ipcRenderer, remote } = require("electron");
+      ipcRenderer.on("theme-change", (e, data) => {
+        Manage_Theme(data);
+      });
+      var from = document.getElementById("from");
+      var to = document.getElementById("to");
+      var inp = document.getElementById("inp");
+      var inp1 = document.getElementById("inp1");
+      inp1.readOnly = true;
+      document.getElementById("btn").addEventListener("click", () => {
+        if (isNaN(inp.value.trim()) && inp.value.trim()) {
+          inp1.value = "Invalid";
+          return;
+        }
+        var dig = +inp.value.trim();
+        inp.value = "";
+        if (from.value == "min") {
+          switch (to.value) {
+            case "min":
+              inp1.value = `${dig}mins`;
+              return;
+            case "hrs":
+              inp1.value = `${Math.floor(dig / 60)}hr`;
+              return;
+            case "sec":
+              inp1.value = `${dig * 60}sec`;
+              return;
+          }
+        }
+        if (from.value == "hrs") {
+          switch (to.value) {
+            case "min":
+              inp1.value = `${dig * 60}mins`;
+              return;
+            case "hrs":
+              inp1.value = `${dig}hr`;
+              return;
+            case "sec":
+              inp1.value = `${dig * 60 * 60}sec`;
+              return;
+          }
+        }
+        if (from.value == "sec") {
+          switch (to.value) {
+            case "min":
+              inp1.value = `${Math.floor(dig / 60)}mins`;
+              return;
+            case "hrs":
+              inp1.value = `${Math.floor(dig / 3600)}hr`;
+              return;
+            case "sec":
+              inp1.value = `${dig}sec`;
+              return;
+          }
+        }
+      });
+      const Manage_Theme = (theme) => {
+        var curBg = document.body;
+        curBg.style.backgroundSize = "cover";
+        curBg.style.backgroundRepeat = "no-repeat";
+        curBg.style.minHeight = "100vh";
+        curBg.style.textShadow = "1px 1px 1px black";
+        curBg.style.color = "white";
+        if (theme == "Simplx-Light") {
+          curBg.style.background = "white";
+          curBg.style.color = "black";
+          curBg.style.textShadow = "none";
+        }
+        if (theme == "Simplx-Dark") {
+          curBg.style.background = "rgb(39, 40, 41)";
+          curBg.style.color = "yellow";
+        }
+        if (theme == "Party-Tonight") {
+          curBg.style.background = "#21D4FD";
+          curBg.style.backgroundImage =
+            "linear-gradient(19deg, #21D4FD 0%, #B721FF 100%)";
+          curBg.style.textShadow = "2px 2px 2px black";
+        }
+        if (theme == "Vintage-Villager") {
+          curBg.style.background = "#00DBDE";
+          curBg.style.backgroundImage =
+            "linear-gradient(90deg, #00DBDE 0%, #FC00FF 100%)";
+        }
+        if (theme == "BlueOcean") {
+          curBg.style.background = "#0093E9";
+          curBg.style.backgroundImage =
+            "linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)";
+        }
+      };
+      let curWin = remote.getGlobal("global");
+      Manage_Theme(curWin.custom());
+    </script>
+  </footer>
+</html>
