@@ -1,26 +1,60 @@
 {
   "name": "productivity-time",
   "version": "1.0.0",
-  "description": "",
+  "description": "Enhance your productivity with this app.",
   "main": "index.js",
   "scripts": {
-    "start":"electron index.js"
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/homeboy445/Productivity-time.git"
   },
-  "author": "",
+  "author": "homeboy445",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/homeboy445/Productivity-time/issues"
   },
   "homepage": "https://github.com/homeboy445/Productivity-time#readme",
   "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.60",
+    "@electron-forge/maker-deb": "^6.0.0-beta.60",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.60",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.60",
+    "@electron-forge/maker-zip": "^6.0.0-beta.60",
     "electron": "^14.0.0"
   },
   "dependencies": {
     "chart.js": "^3.5.1",
     "electron-squirrel-startup": "^1.0.0"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "productivity_time"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
   }
 }

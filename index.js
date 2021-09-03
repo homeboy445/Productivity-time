@@ -1,6 +1,7 @@
 const { app, BrowserWindow, Menu, ipcMain } = require("electron");
 const path = require("path");
 const fs = require("fs");
+const { WSAEINPROGRESS } = require("constants");
 if (require("electron-squirrel-startup")) {
   app.quit();
 }
@@ -275,6 +276,7 @@ const WipeDataWindowPrompt = () => {
   WipeDataWindow.loadFile(
     path.join(__dirname + "/public/html", "WipeData.html")
   );
+  WipeDataWindow.webContents.openDevTools();
   WipeDataWindow.on("close", () => {
     WipeDataWindow = null;
   });

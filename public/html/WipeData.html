@@ -23,7 +23,8 @@
   <body>
     <h3>
       By doing so every data in the archive will be wiped out and you won't be
-      able to retrieve it there after.
+      able to retrieve it there after. Are you sure you want to delete every
+      thing?
     </h3>
     <div class="bns">
       <button id="yp">Yes</button>
@@ -46,12 +47,20 @@
         Manage_Theme(data);
       });
       document.getElementById("yp").addEventListener("click", () => {
-        fs.writeFile(path.join(__dirname, "TaskText.txt"), "", (e) => {
-          return;
-        });
-        fs.writeFile(path.join(__dirname, "Completed.txt"), "", (e) => {
-          return;
-        });
+        fs.writeFile(
+          path.join(__dirname, "..", "..", "TaskText.txt"),
+          "",
+          (e) => {
+            return;
+          }
+        );
+        fs.writeFile(
+          path.join(__dirname, "..", "..", "Completed.txt"),
+          "",
+          (e) => {
+            return;
+          }
+        );
         ipcRenderer.send("Close-Wipe-Win", "close");
       });
       document.getElementById("no").addEventListener("click", () => {
