@@ -1,4 +1,4 @@
-<h1>--------------------THE PRODUCTIVITY APP--------------------</h1>
+<h1 style="text-align:center">THE PRODUCTIVITY APP</h1>
 
 Well, the productivity app is specifically designed to cater the needs of productivity tracking and thereby enchancement!
 
@@ -19,7 +19,12 @@ Current features of this app:
 NOTE: The best way for getting started with this app is by first reading the help me docs.
 
 <h2>Some Screen Shots for demonstrating the productivity app</h2>
+<h3>A timer for tracking progress:</h3>
 <img src="https://github.com/homeboy445/Productivity-time/blob/main/screenshots/dsp1.PNG" alt="Image1"/>
+<h3>Prioritize accordingly to your work:</h3>
+<img src="https://github.com/homeboy445/Productivity-time/blob/main/screenshots/dsp2.PNG" alt="Image2 />
+                                                                                               <h3>Analyze your productivity graphically:</h3>
+<img src="https://github.com/homeboy445/Productivity-time/blob/main/screenshots/dsp3.PNG" alt="Image3"/>
 
 Well, if you think something could be improved or some new feature could be inserted, please provide feedback
 Or if you want to contribute to it by yourself and want to do changes on your own, that'll be so cool and for doing so please refer below.
