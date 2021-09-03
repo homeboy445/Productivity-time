@@ -23,7 +23,7 @@ NOTE: The best way for getting started with this app is by first reading the hel
 <img src="https://github.com/homeboy445/Productivity-time/blob/main/screenshots/dsp1.PNG" alt="Image1"/>
 <h3>Prioritize accordingly to your work:</h3>
 <img src="https://github.com/homeboy445/Productivity-time/blob/main/screenshots/dsp2.PNG" alt="Image2 />
-                                                                                               <h3>Analyze your productivity graphically:</h3>
+<h3>Analyze your productivity graphically:</h3>
 <img src="https://github.com/homeboy445/Productivity-time/blob/main/screenshots/dsp3.PNG" alt="Image3"/>
 
 Well, if you think something could be improved or some new feature could be inserted, please provide feedback
