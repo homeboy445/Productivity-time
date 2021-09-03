@@ -4,22 +4,17 @@ const fs = require("fs");
 if (require("electron-squirrel-startup")) {
   app.quit();
 }
+
 let mainWindow,
   AddTaskWindow,
   AskTaskWindow,
   TaskDoneWindow,
   CompletedTaskWindow;
-let StatWindow,
-  BreakWindow,
-  ThemeManager = null,
-  HelpPage,
-  DevNotes,
-  WipeDataWindow;
+
+let StatWindow, BreakWindow, HelpPage, DevNotes, WipeDataWindow;
+
 let TimeConvertorWindow;
-let Preferences = fs
-  .readFileSync(path.join(__dirname, "Preferences.txt"))
-  .toString();
-ThemeManager = Preferences;
+
 const WritePreferences = (Pref) => {
   fs.writeFile(path.join(__dirname, "Preferences.txt"), Pref, () => {
     return;
@@ -30,22 +25,18 @@ const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    icon: path.join(__dirname + "/public/html", "icon.ico"),
+    icon: path.join(__dirname, "public", "icon.ico"),
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true,
+      contextIsolation: false
     },
   });
 
-  mainWindow.loadFile(path.join(__dirname + "/public/html", "index.html"));
+  mainWindow.loadFile(path.join(__dirname, "public", "html", "index.html"));
 
   const MainMenu = Menu.buildFromTemplate(MainMenuTemplate);
   Menu.setApplicationMenu(MainMenu);
-  global.custom = () => {
-    return ThemeManager;
-  };
   mainWindow.on("closed", () => {
-    WritePreferences(ThemeManager);
     app.quit();
   });
 };
@@ -79,16 +70,13 @@ const AddTask = () => {
     icon: path.join(__dirname + "/public/", "icon.ico"),
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true,
+      contextIsolation: false
     },
     autoHideMenuBar: true,
   });
-  global.custom = () => {
-    return ThemeManager;
-  };
   AddTaskWindow.loadFile(path.join(__dirname + "/public/html", "Addtask.html"));
   AddTaskWindow.on("close", () => {
-    AddTaskWindow = null; //FOR GARBAGE COLLECTION PURPOSE
+    AddTaskWindow = null; //FOR ENSURING PROPER GARBAGE COLLECTION
   });
 };
 
@@ -99,13 +87,10 @@ const AskTaskPrompt = (data) => {
     icon: path.join(__dirname + "/public/", "icon.ico"),
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true,
+      contextIsolation: false
     },
     autoHideMenuBar: true,
   });
-  global.custom = () => {
-    return ThemeManager;
-  };
   AskTaskWindow.loadFile(path.join(__dirname + "/public/html", "AskTask.html"));
   AskTaskWindow.on("close", () => {
     mainWindow.webContents.send("selected:task", { task: null, status: false });
@@ -120,16 +105,14 @@ const TaskDonePrompt = () => {
     icon: path.join(__dirname + "/public/", "icon.ico"),
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true,
+      contextIsolation: false
     },
     autoHideMenuBar: true,
   });
-  global.custom = () => {
-    return ThemeManager;
-  };
   TaskDoneWindow.loadFile(
     path.join(__dirname + "/public/html", "TaskDone.html")
   );
+  TaskDoneWindow.webContents.openDevTools();
   TaskDoneWindow.on("close", () => {
     mainWindow.webContents.send("task:verdict", { task: null, status: false });
     TaskDoneWindow = null;
@@ -143,13 +126,10 @@ const CompleteTaskPrompt = () => {
     icon: path.join(__dirname + "/public/", "icon.ico"),
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true,
+      contextIsolation: false
     },
     autoHideMenuBar: true,
   });
-  global.custom = () => {
-    return ThemeManager;
-  };
   CompletedTaskWindow.loadFile(
     path.join(__dirname + "/public/html", "CompletedTasks.html")
   );
@@ -178,7 +158,7 @@ const StatWindowPrompt = (data) => {
     icon: path.join(__dirname + "/public/", "icon.ico"),
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true,
+      contextIsolation: false
     },
     autoHideMenuBar: true,
   });
@@ -200,13 +180,10 @@ const BreakWindowPrompt = () => {
     icon: path.join(__dirname + "/public/", "icon.ico"),
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true,
+      contextIsolation: false
     },
     autoHideMenuBar: true,
   });
-  global.custom = () => {
-    return ThemeManager;
-  };
   BreakWindow.loadFile(
     path.join(__dirname + "/public/html", "BreakReminder.html")
   );
@@ -231,13 +208,10 @@ const HelpPagePrompt = () => {
     icon: path.join(__dirname + "/public/", "icon.ico"),
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true,
+      contextIsolation: false
     },
     autoHideMenuBar: true,
   });
-  global.custom = () => {
-    return ThemeManager;
-  };
   HelpPage.loadFile(path.join(__dirname + "/public/html", "Help.html"));
   HelpPage.on("close", () => {
     HelpPage = null;
@@ -245,8 +219,7 @@ const HelpPagePrompt = () => {
 };
 
 const Send_Event = (theme) => {
-  console.log(theme);
-  ThemeManager = theme;
+  WritePreferences(theme);
   if (mainWindow != null) {
     mainWindow.webContents.send("theme-change", theme);
   }
@@ -277,13 +250,10 @@ const DevNotesPrompt = () => {
     icon: path.join(__dirname + "/public/", "icon.ico"),
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true,
+      contextIsolation: false
     },
     autoHideMenuBar: true,
   });
-  global.custom = () => {
-    return ThemeManager;
-  };
   DevNotes.loadFile(path.join(__dirname + "/public/html", "DevNotes.html"));
   DevNotes.on("close", () => {
     DevNotes = null;
@@ -297,13 +267,10 @@ const WipeDataWindowPrompt = () => {
     icon: path.join(__dirname + "/public/", "icon.ico"),
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true,
+      contextIsolation: false
     },
     autoHideMenuBar: true,
   });
-  global.custom = () => {
-    return ThemeManager;
-  };
   WipeDataWindow.loadFile(
     path.join(__dirname + "/public/html", "WipeData.html")
   );
@@ -319,13 +286,10 @@ const TimeConvertorWindowPrompt = () => {
     icon: path.join(__dirname + "/public/", "icon.ico"),
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true,
+      contextIsolation: false
     },
     autoHideMenuBar: true,
   });
-  global.custom = () => {
-    return ThemeManager;
-  };
   TimeConvertorWindow.loadFile(
     path.join(__dirname + "/public/html", "TimeConvertor.html")
   );

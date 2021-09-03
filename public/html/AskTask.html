@@ -34,18 +34,37 @@
       const { ipcRenderer, remote } = require("electron");
       const fs = require("fs");
       const path = require("path");
-      const { getData } = require(path.join(__dirname + "/DataParser.js"));
+      const { getData } = require(path.join(
+        __dirname,
+        "..",
+        "js",
+        "DataParser.js"
+      ));
+      const defaultTheme = require(path.join(
+        __dirname,
+        "..",
+        "js",
+        "utility.js"
+      )).getPreferences();
+
       ipcRenderer.on("theme-change", (e, data) => {
         Manage_Theme(data);
       });
       const Manage_Theme = (theme) => {
+        if (theme === "") {
+          theme = defaultTheme;
+        }
         var curBg = document.body;
         curBg.style.backgroundSize = "cover";
         curBg.style.backgroundRepeat = "no-repeat";
         curBg.style.minHeight = "100vh";
-        curBg.style.color = "white";
         curBg.style.textShadow = "1px 1px 1px black";
-        if (theme == "Simplx-Light") {
+        curBg.style.color = "white";
+        if (
+          theme == "Simplx-Light" ||
+          theme.length === 0 ||
+          typeof theme === undefined
+        ) {
           curBg.style.background = "white";
           curBg.style.color = "black";
           curBg.style.textShadow = "none";
@@ -71,8 +90,7 @@
             "linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)";
         }
       };
-      let curWin = remote.getGlobal("global");
-      Manage_Theme(curWin.custom());
+      Manage_Theme("");
       const AppendTasktoList = (data) => {
         var select = document.getElementById("sel");
         var option = document.createElement("option");

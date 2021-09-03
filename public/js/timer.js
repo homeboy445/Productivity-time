@@ -1,3 +1,4 @@
+const { ipcRenderer, remote } = require("electron");
 const hrs = document.getElementById("hrs");
 const min = document.getElementById("min");
 const sec = document.getElementById("sec");
@@ -8,11 +9,18 @@ const resume = document.createElement("button");
 const buttons = document.querySelector(".butns");
 const fs = require("fs");
 const path = require("path");
-const { getData } = require(path.join(
-  __dirname + "/public/js" + "/Dataparser.js"
-));
+const { getData } = require(path.join(__dirname, "..", "js", "DataParser.js"));
 const { DeleteTask } = require(path.join(
-  __dirname + "/public/js" + "/DeleteTask.js"
+  __dirname,
+  "..",
+  "js",
+  "DeleteTask.js"
+));
+const { getPreferences } = require(path.join(
+  __dirname,
+  "..",
+  "js",
+  "utility.js"
 ));
 var interval_start = 0,
   interval_resume = 0,
@@ -166,6 +174,9 @@ reset.addEventListener("click", async () => {
 });
 
 const Manage_Theme = (theme) => {
+  if (theme.length === 0) {
+    theme = getPreferences();
+  }
   var curBg = document.body;
   curBg.style.backgroundSize = "cover";
   curBg.style.backgroundRepeat = "no-repeat";
@@ -176,7 +187,11 @@ const Manage_Theme = (theme) => {
     curBg.style.color = "black";
     curBg.style.textShadow = "none";
   }
-  if (theme == "Simplx-Dark") {
+  if (
+    theme == "Simplx-Dark" ||
+    theme.length === 0 ||
+    typeof theme === undefined
+  ) {
     curBg.style.background = "rgb(39, 40, 41)";
     curBg.style.color = "yellow";
   }
@@ -210,16 +225,11 @@ const InitiateData = () => {
 document.addEventListener("DOMContentLoaded", () => {
   InitiateData();
 });
-//Task Addition section
-const electron = require("electron");
-const { ipcRenderer, remote } = electron;
 // ipcRenderer.send('item')
 ipcRenderer.on("item:add", (e, obj) => {
   InitiateData();
 });
-let curWin = remote.getGlobal("global");
-Theme_Manager = curWin.custom();
-Manage_Theme(Theme_Manager);
+Manage_Theme("");
 //Add task functionality button
 ipcRenderer.on("theme-change", (e, data) => {
   console.log(data);

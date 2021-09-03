@@ -60,7 +60,7 @@ const Remove_Duplicate = (taskobj) => {
 };
 
 var getData = () => {
-  var data = fs.readFileSync(path.join(__dirname + "/TaskText.txt")).toString();
+  var data = fs.readFileSync(path.join(__dirname,"..","..","TaskText.txt")).toString();
   var Task_Array = data.split("*");
   var Done = [];
   Task_Array.map((item) => {
@@ -154,7 +154,7 @@ const ParseCompleteData = (object) => {
 };
 const GetCompleteData = () => {
   var data = fs
-    .readFileSync(path.join(__dirname + "/Completed.txt"))
+    .readFileSync(path.join(__dirname,'..','..',"Completed.txt"))
     .toString()
     .split("\n");
   var comp = [];

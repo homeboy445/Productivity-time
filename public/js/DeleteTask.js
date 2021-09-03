@@ -1,9 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const { getData } = require(path.join(
-  __dirname + "/public/js",
-  "DataParser.js"
-));
+const { getData } = require(path.join(__dirname, "DataParser.js"));
 const DeleteTask = (task) => {
   var obj = getData();
   var write_string = "",

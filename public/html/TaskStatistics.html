@@ -29,11 +29,22 @@
     const fs = require("fs");
     const path = require("path");
     const { ipcRenderer, remote } = require("electron");
+    const defaultTheme = require(path.join(
+        __dirname,
+        "..",
+        "js",
+        "utility.js"
+      )).getPreferences();
     const Chart = require("chart.js");
     var colors = "grey",
       TextColor = "black";
     const divAp = document.getElementById("Ch-Srt");
-    const { GetCompleteData } = require(path.join(__dirname, "DataParser.js"));
+    const { GetCompleteData } = require(path.join(
+      __dirname,
+      "..",
+      "js",
+      "DataParser.js"
+    ));
     var Months = {
       1: "Jan",
       2: "Feb",
@@ -100,49 +111,46 @@
       }
     });
     const Manage_Theme = (theme) => {
+      if (theme === "") {
+        theme = defaultTheme;
+      }
       var curBg = document.body;
       curBg.style.backgroundSize = "cover";
       curBg.style.backgroundRepeat = "no-repeat";
       curBg.style.minHeight = "100vh";
-      curBg.style.color = "white";
       curBg.style.textShadow = "1px 1px 1px black";
-      if (theme == "Simplx-Light") {
+      curBg.style.color = "white";
+      if (
+        theme == "Simplx-Light" ||
+        theme.length === 0 ||
+        typeof theme === undefined
+      ) {
         curBg.style.background = "white";
         curBg.style.color = "black";
-        colors = "grey";
-        TextColor = "black";
+        curBg.style.textShadow = "none";
       }
       if (theme == "Simplx-Dark") {
         curBg.style.background = "rgb(39, 40, 41)";
         curBg.style.color = "yellow";
-        colors = "yellow";
-        TextColor = "yellow";
       }
       if (theme == "Party-Tonight") {
         curBg.style.background = "#21D4FD";
         curBg.style.backgroundImage =
           "linear-gradient(19deg, #21D4FD 0%, #B721FF 100%)";
         curBg.style.textShadow = "2px 2px 2px black";
-        colors = "red";
-        TextColor = "white";
       }
       if (theme == "Vintage-Villager") {
         curBg.style.background = "#00DBDE";
         curBg.style.backgroundImage =
           "linear-gradient(90deg, #00DBDE 0%, #FC00FF 100%)";
-        colors = "rgb(61, 255, 245)";
-        TextColor = "red";
       }
       if (theme == "BlueOcean") {
         curBg.style.background = "#0093E9";
         curBg.style.backgroundImage =
           "linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)";
-        colors = "purple";
-        TextColor = "red";
       }
     };
-    let curWin = remote.getGlobal("global");
-    Manage_Theme(curWin.custom());
+    Manage_Theme("");
     const GroupByDate = (obj) => {
       var dates = {};
       obj.map((item) => {

@@ -65,8 +65,18 @@
       const path = require("path");
       const { ipcRenderer, remote } = require("electron");
       const { GetCompleteData } = require(path.join(
-        __dirname + "/DataParser.js"
+        __dirname,
+        "..",
+        "js",
+        "DataParser.js"
       ));
+      const defaultTheme = require(path.join(
+        __dirname,
+        "..",
+        "js",
+        "utility.js"
+      )).getPreferences();
+
       var select = document.getElementById("ss");
       ipcRenderer.on("theme-change", (e, data) => {
         Manage_Theme(data);
@@ -86,13 +96,23 @@
         12: "Dec",
       };
       const Manage_Theme = (theme) => {
+        if (theme === "") {
+          theme = defaultTheme;
+        }
         var curBg = document.body;
         curBg.style.backgroundSize = "cover";
         curBg.style.backgroundRepeat = "no-repeat";
         curBg.style.minHeight = "100vh";
-        if (theme == "Simplx-Light") {
+        curBg.style.textShadow = "1px 1px 1px black";
+        curBg.style.color = "white";
+        if (
+          theme == "Simplx-Light" ||
+          theme.length === 0 ||
+          typeof theme === undefined
+        ) {
           curBg.style.background = "white";
           curBg.style.color = "black";
+          curBg.style.textShadow = "none";
         }
         if (theme == "Simplx-Dark") {
           curBg.style.background = "rgb(39, 40, 41)";
@@ -102,7 +122,6 @@
           curBg.style.background = "#21D4FD";
           curBg.style.backgroundImage =
             "linear-gradient(19deg, #21D4FD 0%, #B721FF 100%)";
-          curBg.style.color = "white";
           curBg.style.textShadow = "2px 2px 2px black";
         }
         if (theme == "Vintage-Villager") {
@@ -116,8 +135,7 @@
             "linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)";
         }
       };
-      let curWin = remote.getGlobal("global");
-      Manage_Theme(curWin.custom());
+      Manage_Theme("");
       var selected_date = null;
       const GroupByDate = (obj) => {
         var dates = {};
