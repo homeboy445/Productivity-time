@@ -19,7 +19,7 @@ Current features of this app:
 NOTE: The best way for getting started with this app is by first reading the help me docs.
 
 <h2>Some Screen Shots for demonstrating the productivity app</h2>
-![Image 1](https://github.com/homeboy445/Productivity-time/blob/main/screenshots/dsp1.PNG)
+<img src="https://github.com/homeboy445/Productivity-time/blob/main/screenshots/dsp1.PNG" alt="Image1"/>
 
 Well, if you think something could be improved or some new feature could be inserted, please provide feedback
 Or if you want to contribute to it by yourself and want to do changes on your own, that'll be so cool and for doing so please refer below.
