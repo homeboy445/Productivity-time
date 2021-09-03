@@ -134,6 +134,7 @@ reset.addEventListener("click", async () => {
   if (flag) {
     flag = false;
     var proceed = await Task_Done_Prompt();
+    console.log(proceed);
     if (proceed.status) {
       resume.remove();
       var cur = document.getElementById("current");
@@ -148,7 +149,7 @@ reset.addEventListener("click", async () => {
         if (Done[i].task == cur.innerText) {
           completed_task = Done[i].task;
           id = id == null ? i : id;
-          if (proceed.verdict != "Next Project") {
+          if (proceed.verdict != "Continue later") {
             Done.splice(i, 1);
           }
         }
@@ -157,14 +158,15 @@ reset.addEventListener("click", async () => {
       var obj = `[${new Date().toLocaleDateString()}]|{${completed_task}=(${
         hrs.innerText
       }:${min.innerText}:${sec.innerText})}\n`;
+      console.log(obj);
       fs.appendFile(
-        path.join(__dirname + "/public/js", "Completed.txt"),
+        path.join(__dirname, "..", "..", "Completed.txt"),
         obj,
         (e) => {
           return;
         }
       );
-      if (proceed.verdict != "Next Project") {
+      if (proceed.verdict != "Continue later") {
         DeleteTask(completed_task);
         document.getElementById("tasklist").deleteRow(id + 1);
       }

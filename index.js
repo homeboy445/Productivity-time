@@ -28,7 +28,7 @@ const createWindow = () => {
     icon: path.join(__dirname, "public", "icon.ico"),
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
     },
   });
 
@@ -70,7 +70,7 @@ const AddTask = () => {
     icon: path.join(__dirname + "/public/", "icon.ico"),
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
     },
     autoHideMenuBar: true,
   });
@@ -87,7 +87,7 @@ const AskTaskPrompt = (data) => {
     icon: path.join(__dirname + "/public/", "icon.ico"),
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
     },
     autoHideMenuBar: true,
   });
@@ -105,14 +105,14 @@ const TaskDonePrompt = () => {
     icon: path.join(__dirname + "/public/", "icon.ico"),
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
     },
     autoHideMenuBar: true,
   });
   TaskDoneWindow.loadFile(
     path.join(__dirname + "/public/html", "TaskDone.html")
   );
-  TaskDoneWindow.webContents.openDevTools();
+
   TaskDoneWindow.on("close", () => {
     mainWindow.webContents.send("task:verdict", { task: null, status: false });
     TaskDoneWindow = null;
@@ -126,7 +126,7 @@ const CompleteTaskPrompt = () => {
     icon: path.join(__dirname + "/public/", "icon.ico"),
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
     },
     autoHideMenuBar: true,
   });
@@ -158,7 +158,7 @@ const StatWindowPrompt = (data) => {
     icon: path.join(__dirname + "/public/", "icon.ico"),
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
     },
     autoHideMenuBar: true,
   });
@@ -168,6 +168,7 @@ const StatWindowPrompt = (data) => {
   StatWindow.loadFile(
     path.join(__dirname + "/public/html", "TaskStatistics.html")
   );
+
   StatWindow.on("close", () => {
     StatWindow = null;
   });
@@ -180,7 +181,7 @@ const BreakWindowPrompt = () => {
     icon: path.join(__dirname + "/public/", "icon.ico"),
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
     },
     autoHideMenuBar: true,
   });
@@ -208,7 +209,7 @@ const HelpPagePrompt = () => {
     icon: path.join(__dirname + "/public/", "icon.ico"),
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
     },
     autoHideMenuBar: true,
   });
@@ -250,7 +251,7 @@ const DevNotesPrompt = () => {
     icon: path.join(__dirname + "/public/", "icon.ico"),
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
     },
     autoHideMenuBar: true,
   });
@@ -267,7 +268,7 @@ const WipeDataWindowPrompt = () => {
     icon: path.join(__dirname + "/public/", "icon.ico"),
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
     },
     autoHideMenuBar: true,
   });
@@ -286,7 +287,7 @@ const TimeConvertorWindowPrompt = () => {
     icon: path.join(__dirname + "/public/", "icon.ico"),
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
     },
     autoHideMenuBar: true,
   });

@@ -28,13 +28,13 @@
   <script>
     const fs = require("fs");
     const path = require("path");
-    const { ipcRenderer, remote } = require("electron");
+    const { ipcRenderer } = require("electron");
     const defaultTheme = require(path.join(
-        __dirname,
-        "..",
-        "js",
-        "utility.js"
-      )).getPreferences();
+      __dirname,
+      "..",
+      "js",
+      "utility.js"
+    )).getPreferences();
     const Chart = require("chart.js");
     var colors = "grey",
       TextColor = "black";
@@ -118,36 +118,36 @@
       curBg.style.backgroundSize = "cover";
       curBg.style.backgroundRepeat = "no-repeat";
       curBg.style.minHeight = "100vh";
-      curBg.style.textShadow = "1px 1px 1px black";
       curBg.style.color = "white";
-      if (
-        theme == "Simplx-Light" ||
-        theme.length === 0 ||
-        typeof theme === undefined
-      ) {
+      curBg.style.textShadow = "1px 1px 1px black";
+      if (theme == "Simplx-Light") {
         curBg.style.background = "white";
         curBg.style.color = "black";
-        curBg.style.textShadow = "none";
+        colors = "grey";
       }
       if (theme == "Simplx-Dark") {
         curBg.style.background = "rgb(39, 40, 41)";
         curBg.style.color = "yellow";
+        colors = "yellow";
       }
       if (theme == "Party-Tonight") {
         curBg.style.background = "#21D4FD";
         curBg.style.backgroundImage =
           "linear-gradient(19deg, #21D4FD 0%, #B721FF 100%)";
         curBg.style.textShadow = "2px 2px 2px black";
+        colors = "red";
       }
       if (theme == "Vintage-Villager") {
         curBg.style.background = "#00DBDE";
         curBg.style.backgroundImage =
           "linear-gradient(90deg, #00DBDE 0%, #FC00FF 100%)";
+        colors = "rgb(61, 255, 245)";
       }
       if (theme == "BlueOcean") {
         curBg.style.background = "#0093E9";
         curBg.style.backgroundImage =
           "linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)";
+        colors = "purple";
       }
     };
     Manage_Theme("");
@@ -210,7 +210,6 @@
       canvas.id = date;
       var div = document.getElementById("chart-div");
       div.appendChild(canvas);
-      Chart.defaults.global.defaultFontColor = TextColor;
       var TaskChart = new Chart(date, {
         type: "bar",
         data: {
