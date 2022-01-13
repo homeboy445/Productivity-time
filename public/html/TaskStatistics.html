@@ -21,7 +21,7 @@
     <select id="Selc">
       <option value="time">Select</option>
     </select>
-    <button id="gp">Show Graph</button>
+    <button id="show_graph_btn">Show Graph</button>
     <div id="chart-div"></div>
     <div id="Ch-Srt"></div>
   </body>
@@ -63,7 +63,7 @@
       var M_list = {},
         kk = 0;
       data.map((item) => {
-        kk = item.date.split("/")[0];
+        kk = item.completion_date.split("/")[0];
         if (typeof M_list[+kk] == undefined || M_list[+kk] == null) {
           M_list[+kk] = [item];
         } else {
@@ -73,14 +73,14 @@
       return M_list;
     };
     var Select = document.getElementById("Selc");
-    const Data = GetCompleteData()[1];
-    var Month_data = GroupByMonth(Data);
+    const Complete_Data = GetCompleteData();
+    var Month_data = GroupByMonth(Complete_Data);
     const AppendMonth = (obj) => {
       for (const [key, value] of Object.entries(obj)) {
         var sel = document.getElementById("mt");
         var option = document.createElement("option");
         option.value = key;
-        option.innerText = Months[key];
+        option.innerText = Months[key]; //Parsed the months from Completed.json and then used that month number to append the months(from Months object)...
         sel.appendChild(option);
       }
     };
@@ -154,12 +154,17 @@
     const GroupByDate = (obj) => {
       var dates = {};
       obj.map((item) => {
-        if (typeof dates[item.date] == undefined || dates[item.date] == null) {
-          dates[item.date] = [{ task: item.task, time_taken: item.time_taken }];
+        if (
+          typeof dates[item.completion_date] == undefined ||
+          dates[item.completion_date] == null
+        ) {
+          dates[item.completion_date] = [
+            { task: item.name, time_taken: item.elapsed_time },
+          ];
         } else {
-          dates[item.date].push({
-            task: item.task,
-            time_taken: item.time_taken,
+          dates[item.completion_date].push({
+            task: item.name,
+            time_taken: item.elapsed_time,
           });
         }
       });
@@ -196,20 +201,29 @@
         Time_Taken = [];
       var Task_Obj = {};
       var counter = 0;
-      Data.map((item) => {
-        if (item.date == date) {
+      Complete_Data.map((item) => {
+        const parseTime = (time) => {
+          const time_ = time.split(":").map((t) => +t); //converting the charater to digit!
+          console.log("=> ", time_);
+          return time_[0] * 60 + time_[1] + Math.floor(time_[2] / 60);
+        };
+        if (item.completion_date == date) {
           var Tsk = `T${++counter}`;
-          if (typeof Task_Obj[item] == undefined || Task_Obj[item] == null) {
-            Task_Obj[Tsk] = item.task;
+          if (
+            typeof Task_Obj[item.name] == undefined ||
+            Task_Obj[item.name] == null
+          ) {
+            Task_Obj[Tsk] = item.name;
           }
           Task_Data.push(Tsk);
-          Time_Taken.push(item.time_taken / 60);
+          Time_Taken.push(parseTime(item.elapsed_time)); //Adding the elapsed time for the corresponding task...
         }
       });
       var canvas = document.createElement("canvas");
       canvas.id = date;
       var div = document.getElementById("chart-div");
       div.appendChild(canvas);
+      console.log(Task_Data, " ", Time_Taken);
       var TaskChart = new Chart(date, {
         type: "bar",
         data: {
@@ -237,7 +251,7 @@
         AppendToList(div1, `${key}:${value}`);
       }
     };
-    const button = document.getElementById("gp");
+    const button = document.getElementById("show_graph_btn");
     button.addEventListener("click", () => {
       if (Select.value == "time") {
         return;

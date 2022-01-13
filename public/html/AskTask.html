@@ -34,7 +34,7 @@
       const { ipcRenderer, remote } = require("electron");
       const fs = require("fs");
       const path = require("path");
-      const { getData } = require(path.join(
+      const { getLocalData } = require(path.join(
         __dirname,
         "..",
         "js",
@@ -94,11 +94,11 @@
       const AppendTasktoList = (data) => {
         var select = document.getElementById("sel");
         var option = document.createElement("option");
-        option.innerText = data.task;
-        option.value = data.task;
+        option.innerText = data.name;
+        option.value = data.name;
         select.appendChild(option);
       };
-      var data = getData();
+      var data = getLocalData();
       data.map((item) => {
         AppendTasktoList(item);
       });

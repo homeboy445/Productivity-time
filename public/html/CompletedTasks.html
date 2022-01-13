@@ -141,16 +141,16 @@
         var dates = {};
         obj.map((item) => {
           if (
-            typeof dates[item.date] == undefined ||
-            dates[item.date] == null
+            typeof dates[item.completion_date] == undefined ||
+            dates[item.completion_date] == null
           ) {
-            dates[item.date] = [
-              { task: item.task, time_taken: item.time_taken },
+            dates[item.completion_date] = [
+              { task: item.name, time_taken: item.elapsed_time },
             ];
           } else {
-            dates[item.date].push({
-              task: item.task,
-              time_taken: item.time_taken,
+            dates[item.completion_date].push({
+              task: item.name,
+              time_taken: item.elapsed_time,
             });
           }
         });
@@ -160,7 +160,7 @@
         var M_list = {},
           kk = 0;
         data.map((item) => {
-          kk = item.date.split("/")[0];
+          kk = item.completion_date.split("/")[0];
           if (typeof M_list[+kk] == undefined || M_list[+kk] == null) {
             M_list[+kk] = [item];
           } else {
@@ -178,7 +178,7 @@
           ok.appendChild(option);
         }
       };
-      var data_R = GetCompleteData()[0];
+      var data_R = GetCompleteData();
       var Mlist = GroupByMonth(data_R);
       var data,
         cur_month = null;
@@ -192,7 +192,7 @@
         }
         if (cur_month != null) {
           Mlist[cur_month].map((item) => {
-            var dv = document.getElementById(`${item.date}`);
+            var dv = document.getElementById(`${item.completion_date}`);
             dv.remove();
           });
         }
@@ -225,8 +225,8 @@
         data[date].map((item) => {
           var h1 = document.createElement("h1");
           var h2 = document.createElement("h2");
-          h1.innerText = `Task:${item.task}`;
-          h2.innerText = `Time it Took to complete:${item.time_taken}`;
+          h1.innerText = `Task: ${item.task}`;
+          h2.innerText = `Time it Took to complete: ${item.time_taken} hrs`;
           div1.appendChild(h1);
           div1.appendChild(h2);
         });

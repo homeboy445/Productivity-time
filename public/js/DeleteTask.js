@@ -1,23 +1,23 @@
 const fs = require("fs");
 const path = require("path");
-const { getData } = require(path.join(__dirname, "DataParser.js"));
+const { getLocalData } = require(path.join(__dirname, "DataParser.js"));
 const DeleteTask = (task) => {
-  var obj = getData();
-  var write_string = "",
-    id;
-  for (var i = 0; i < obj.length; i++) {
-    if (obj[i].task == task) {
-      id = obj[i].id;
-      obj.splice(i, 1);
+  const data_array = getLocalData();
+  for (var i = 0; i < data_array.length; i++) {
+    if (data_array[i].name === task) {
+      id = data_array[i].id;
+      data_array.splice(i, 1);
     }
   }
-  obj.map((item) => {
-    write_string += `([${item.date}]|${item.id}+${item.task}+${item.priority})*`;
-  });
-  fs.writeFile(path.join(__dirname, "TaskText.txt"), write_string, (e) => {
-    return;
-  });
+  return fs.writeFileSync(
+    path.join(__dirname, "..", "..", "TaskList.json"),
+    JSON.stringify(data_array),
+    (e, data) => {
+      return;
+    }
+  );
 };
+
 module.exports = {
   DeleteTask,
 };

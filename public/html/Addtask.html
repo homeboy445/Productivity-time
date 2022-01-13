@@ -37,8 +37,8 @@
   <footer>
     <script>
       const { ipcRenderer, remote } = require("electron");
-      const path = require("path");
       const fs = require("fs");
+      const path = require("path");
       const { getPreferences } = require(path.join(
         __dirname,
         "..",
@@ -47,7 +47,7 @@
       ));
       const defaultTheme = getPreferences();
       const form = document.getElementById("taskform");
-      var counter = 0;
+      let counter = 0;
       
       ipcRenderer.on("theme-change", (e, data) => {
         Manage_Theme(data);
@@ -56,7 +56,7 @@
         if (theme === "") {
           theme = defaultTheme;
         }
-        var curBg = document.body;
+        let curBg = document.body;
         curBg.style.backgroundSize = "cover";
         curBg.style.backgroundRepeat = "no-repeat";
         curBg.style.minHeight = "100vh";

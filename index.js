@@ -17,9 +17,13 @@ let StatWindow, BreakWindow, HelpPage, DevNotes, WipeDataWindow;
 let TimeConvertorWindow;
 
 const WritePreferences = (Pref) => {
-  fs.writeFile(path.join(__dirname, "Preferences.txt"), Pref, () => {
-    return;
-  });
+  fs.writeFile(
+    path.join(__dirname, "Preferences.json"),
+    JSON.stringify({ theme: Pref }),
+    () => {
+      return;
+    }
+  );
 };
 
 const createWindow = () => {
@@ -47,16 +51,14 @@ ipcMain.on("openWindow", (e, item) => {
 });
 
 ipcMain.on("item:add", (e, obj) => {
-  fs.appendFile(
-    path.join(__dirname, "TaskText.txt"),
-    `([${new Date().toLocaleDateString()}]|${Date.now()}+${obj.value}+${
-      obj.priority
-    })*`,
-    (err) => {
-      mainWindow.webContents.send("item:add", obj);
-      AddTaskWindow.close();
-    }
-  );
+  const data = {
+    name: obj.value,
+    id: Date.now(),
+    date: new Date().toLocaleDateString(),
+    priority: obj.priority,
+  };
+  mainWindow.webContents.send("item:add", data);
+  AddTaskWindow.close();
 });
 
 ipcMain.on("selected:task", (e, data) => {
